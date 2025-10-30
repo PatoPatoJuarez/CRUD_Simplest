@@ -1,32 +1,33 @@
-import { useState } from 'react'
-import './App.css'
+import { useState, useEffect } from 'react'
 import Auth from './components/Auth'
+import Dashboard from './components/Dashboard'
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('token') || null)
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null)
+
+  useEffect(() => {
+    if (token && user) {
+      localStorage.setItem('token', token)
+      localStorage.setItem('user', JSON.stringify(user))
+    } else {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+    }
+  }, [token, user])
 
   const handleLogout = () => {
-    localStorage.removeItem('token')
     setToken(null)
+    setUser(null)
   }
 
   return (
-    <div className="App">
-      <header>
-        <h1>React + Node.js API</h1>
-      </header>
-      
-      <main>
-        {!token ? (
-          <Auth setToken={setToken} />
-        ) : (
-          <div className="dashboard">
-            <h2>¡Bienvenido!</h2>
-            <p>Has iniciado sesión correctamente</p>
-            <button onClick={handleLogout}>Cerrar Sesión</button>
-          </div>
-        )}
-      </main>
+    <div className="min-h-screen">
+      {!token ? (
+        <Auth setToken={setToken} setUser={setUser} />
+      ) : (
+        <Dashboard user={user} onLogout={handleLogout} />
+      )}
     </div>
   )
 }
