@@ -6,13 +6,6 @@ export const crearJuicio = async (req, res) => {
     const { caratula, fechaInicio } = req.body;
     const ID_Abogado = req.user.id;
 
-    // Validaciones
-    if (!caratula || !fechaInicio) {
-      return res.status(400).json({ 
-        message: 'Carátula y fecha de inicio son requeridos' 
-      });
-    }
-
     const nuevoJuicio = await JuicioModel.create({
       ID_Abogado,
       caratula,
@@ -87,12 +80,6 @@ export const actualizarJuicio = async (req, res) => {
 
     if (isNaN(ID_Juicio)) {
       return res.status(400).json({ message: 'ID de juicio inválido' });
-    }
-
-    if (!caratula || !fechaInicio) {
-      return res.status(400).json({ 
-        message: 'Carátula y fecha de inicio son requeridos' 
-      });
     }
 
     const updated = await JuicioModel.update(ID_Juicio, ID_Abogado, {

@@ -11,13 +11,6 @@ export const crearHistorial = async (req, res) => {
       return res.status(400).json({ message: 'ID de juicio inválido' });
     }
 
-    // Validaciones
-    if (!fecha || !descripcion) {
-      return res.status(400).json({ 
-        message: 'Fecha y descripción son requeridos' 
-      });
-    }
-
     // Verificar que el juicio pertenece al abogado
     const isOwner = await HistorialModel.verifyJuicioOwnership(ID_Juicio, ID_Abogado);
     if (!isOwner) {
@@ -122,12 +115,6 @@ export const actualizarHistorial = async (req, res) => {
 
     if (isNaN(ID_Historial) || isNaN(ID_Juicio)) {
       return res.status(400).json({ message: 'IDs inválidos' });
-    }
-
-    if (!fecha || !descripcion) {
-      return res.status(400).json({ 
-        message: 'Fecha y descripción son requeridos' 
-      });
     }
 
     // Verificar que el juicio pertenece al abogado

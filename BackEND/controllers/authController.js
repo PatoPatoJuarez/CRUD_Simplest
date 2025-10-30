@@ -7,11 +7,6 @@ export const register = async (req, res) => {
   try {
     const { nombre, email, password } = req.body;
 
-    // Validaciones básicas
-    if (!nombre || !email || !password) {
-      return res.status(400).json({ message: 'Todos los campos son requeridos' });
-    }
-
     // Verificar si el usuario ya existe
     const userExists = await AbogadoModel.findByEmail(email);
     if (userExists) {
@@ -52,11 +47,6 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    // Validaciones básicas
-    if (!email || !password) {
-      return res.status(400).json({ message: 'Email y contraseña son requeridos' });
-    }
 
     // Buscar abogado
     const abogado = await AbogadoModel.findByEmail(email);

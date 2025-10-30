@@ -7,17 +7,18 @@ import {
   actualizarJuicio, 
   eliminarJuicio 
 } from '../controllers/juicioController.js';
+import { validate, juicioSchema } from '../validators/validators.js';
 
 const router = express.Router();
 
 // Todas las rutas están protegidas por JWT
 router.use(authenticateToken);
 
-// Rutas CRUD de juicios
-router.post('/', crearJuicio);
+// Rutas CRUD de juicios con validaciones
+router.post('/', validate(juicioSchema), crearJuicio);
 router.get('/', obtenerJuicios);
 router.get('/:id', obtenerJuicioPorId);
-router.put('/:id', actualizarJuicio);
+router.put('/:id', validate(juicioSchema), actualizarJuicio);
 router.delete('/:id', eliminarJuicio);
 
 export default router;
