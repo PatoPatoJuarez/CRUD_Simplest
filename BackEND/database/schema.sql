@@ -1,5 +1,5 @@
 -- ============================================
--- Script de Base de Datos - Sistema de Gestión de Juicios
+-- Script de Base de Datos - Sistema de Gestiï¿½n de Juicios
 -- ============================================
 
 -- Crear base de datos
@@ -19,7 +19,7 @@ BEGIN
         ID_Abogado INT PRIMARY KEY IDENTITY(1,1),
         Nombre NVARCHAR(100) NOT NULL,
         Email NVARCHAR(100) NOT NULL UNIQUE,
-        Contraseña NVARCHAR(255) NOT NULL,
+        Contraseï¿½a NVARCHAR(255) NOT NULL,
         FechaCreacion DATETIME DEFAULT GETDATE()
     );
 END
@@ -53,7 +53,7 @@ BEGIN
 END
 GO
 
--- Índices para mejorar performance
+-- indices para mejorar performance
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_Juicio_Abogado')
     CREATE INDEX IX_Juicio_Abogado ON Juicio(ID_Abogado);
 GO
