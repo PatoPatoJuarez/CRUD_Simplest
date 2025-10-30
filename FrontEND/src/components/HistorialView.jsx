@@ -110,7 +110,7 @@ function HistorialView({ juicio, onBack }) {
           </h2>
           <p className="text-gray-700 font-medium mb-2">{juicio.Caratula}</p>
           <div className="flex flex-wrap gap-4 text-sm text-gray-600">
-            <span>📅 Inicio: {new Date(juicio.FechaInicio).toLocaleDateString('es-AR')}</span>
+            <span>📅 Inicio: {juicio.FechaInicio.split('T')[0]}</span>
             <span>⏱️ Días transcurridos: <strong className="text-blue-600">{juicio.DiasTranscurridos}</strong></span>
           </div>
         </div>
@@ -205,7 +205,7 @@ function HistorialView({ juicio, onBack }) {
               >
                 <div className="flex flex-col sm:flex-row justify-between gap-4 mb-3">
                   <div className="flex items-center gap-2 text-sm font-medium text-gray-600">
-                    📅 {new Date(entry.Fecha).toLocaleDateString('es-AR')}
+                    📅 {entry.Fecha.split('T')[0]}
                   </div>
                   <div className="flex gap-2">
                     <button

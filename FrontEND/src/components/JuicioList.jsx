@@ -97,7 +97,7 @@ function JuicioList({ juicios, loading, onCreate, onEdit, onDelete, onViewHistor
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <span>📅</span>
                   <span>
-                    {new Date(juicio.FechaInicio).toLocaleDateString('es-AR')}
+                    {juicio.FechaInicio.split('T')[0]}
                   </span>
                 </div>
               </div>
