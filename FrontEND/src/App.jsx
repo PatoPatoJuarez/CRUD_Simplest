@@ -1,32 +1,24 @@
-import { useState, useEffect } from 'react'
 import Auth from './components/Auth'
 import Dashboard from './components/Dashboard'
+import { useAuth } from './hooks/useAuth'
 
 function App() {
-  const [token, setToken] = useState(localStorage.getItem('token') || null)
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null)
+  const { user, loading, login, register, logout, isAuthenticated } = useAuth()
 
-  useEffect(() => {
-    if (token && user) {
-      localStorage.setItem('token', token)
-      localStorage.setItem('user', JSON.stringify(user))
-    } else {
-      localStorage.removeItem('token')
-      localStorage.removeItem('user')
-    }
-  }, [token, user])
-
-  const handleLogout = () => {
-    setToken(null)
-    setUser(null)
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    )
   }
 
   return (
     <div className="min-h-screen">
-      {!token ? (
-        <Auth setToken={setToken} setUser={setUser} />
+      {!isAuthenticated() ? (
+        <Auth onLogin={login} onRegister={register} />
       ) : (
-        <Dashboard user={user} onLogout={handleLogout} />
+        <Dashboard user={user} onLogout={logout} />
       )}
     </div>
   )

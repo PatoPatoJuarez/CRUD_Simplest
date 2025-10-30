@@ -1,39 +1,14 @@
-import { useState, useEffect } from 'react'
-import axios from 'axios'
+import { useState } from 'react'
 import JuicioList from './JuicioList'
 import JuicioForm from './JuicioForm'
 import HistorialView from './HistorialView'
-
-const API_URL = 'http://localhost:5000/api'
+import { useJuicios } from '../hooks/useJuicios'
 
 function Dashboard({ user, onLogout }) {
-  const [juicios, setJuicios] = useState([])
+  const { juicios, loading, fetchJuicios, deleteJuicio } = useJuicios()
   const [selectedJuicio, setSelectedJuicio] = useState(null)
   const [showForm, setShowForm] = useState(false)
   const [showHistorial, setShowHistorial] = useState(false)
-  const [loading, setLoading] = useState(true)
-
-  const token = localStorage.getItem('token')
-
-  const axiosConfig = {
-    headers: { Authorization: `Bearer ${token}` }
-  }
-
-  useEffect(() => {
-    fetchJuicios()
-  }, [])
-
-  const fetchJuicios = async () => {
-    try {
-      setLoading(true)
-      const response = await axios.get(`${API_URL}/juicios`, axiosConfig)
-      setJuicios(response.data.juicios)
-    } catch (error) {
-      console.error('Error al cargar juicios:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const handleCreateJuicio = () => {
     setSelectedJuicio(null)
@@ -56,16 +31,16 @@ function Dashboard({ user, onLogout }) {
   const handleDeleteJuicio = async (id) => {
     if (!confirm('¿Estás seguro de eliminar este juicio?')) return
 
-    try {
-      await axios.delete(`${API_URL}/juicios/${id}`, axiosConfig)
-      fetchJuicios()
+    const result = await deleteJuicio(id)
+    
+    if (result.success) {
       if (selectedJuicio?.ID_Juicio === id) {
         setSelectedJuicio(null)
         setShowForm(false)
         setShowHistorial(false)
       }
-    } catch (error) {
-      alert('Error al eliminar juicio')
+    } else {
+      alert(result.error)
     }
   }
 

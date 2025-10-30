@@ -1,9 +1,6 @@
 import { useState } from 'react'
-import axios from 'axios'
 
-const API_URL = 'http://localhost:5000/api/auth'
-
-function Auth({ setToken, setUser }) {
+function Auth({ onLogin, onRegister }) {
   const [isLogin, setIsLogin] = useState(true)
   const [formData, setFormData] = useState({
     nombre: '',
@@ -25,26 +22,20 @@ function Auth({ setToken, setUser }) {
     setLoading(true)
     setMessage('')
 
-    try {
-      const endpoint = isLogin ? `${API_URL}/login` : `${API_URL}/register`
-      const data = isLogin 
-        ? { email: formData.email, password: formData.password }
-        : { nombre: formData.nombre, email: formData.email, password: formData.password }
+    const result = isLogin 
+      ? await onLogin(formData.email, formData.password)
+      : await onRegister(formData.nombre, formData.email, formData.password)
 
-      const response = await axios.post(endpoint, data)
-      
-      setToken(response.data.token)
-      setUser(response.data.user)
-      setMessage(response.data.message)
-      
+    setLoading(false)
+
+    if (result.success) {
+      setMessage(isLogin ? 'Inicio de sesión exitoso' : 'Registro exitoso')
       // Recargar la página para que el Dashboard se monte correctamente
       setTimeout(() => {
         window.location.reload()
       }, 500)
-    } catch (error) {
-      setMessage(error.response?.data?.message || 'Error en la operación')
-    } finally {
-      setLoading(false)
+    } else {
+      setMessage(result.error)
     }
   }
 
