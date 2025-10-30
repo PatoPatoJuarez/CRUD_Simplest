@@ -1,4 +1,13 @@
+import { useState } from 'react'
+
 function JuicioList({ juicios, loading, onCreate, onEdit, onDelete, onViewHistorial }) {
+  const [searchTerm, setSearchTerm] = useState('')
+
+  // Filtrar juicios por término de búsqueda
+  const filteredJuicios = juicios.filter(juicio =>
+    juicio.Caratula.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
   if (loading) {
     return (
       <div className="flex justify-center items-center py-12">
@@ -10,20 +19,41 @@ function JuicioList({ juicios, loading, onCreate, onEdit, onDelete, onViewHistor
   return (
     <div>
       {/* Header con botón crear */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Mis Juicios</h2>
-          <p className="text-sm text-gray-600 mt-1">
-            {juicios.length} {juicios.length === 1 ? 'juicio' : 'juicios'} registrados
-          </p>
+      <div className="mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900">Mis Juicios</h2>
+            <p className="text-sm text-gray-600 mt-1">
+              {filteredJuicios.length} de {juicios.length} {juicios.length === 1 ? 'juicio' : 'juicios'}
+            </p>
+          </div>
+          <button
+            onClick={onCreate}
+            className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center gap-2"
+          >
+            <span className="text-lg">+</span>
+            Nuevo Juicio
+          </button>
         </div>
-        <button
-          onClick={onCreate}
-          className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center gap-2"
-        >
-          <span className="text-lg">+</span>
-          Nuevo Juicio
-        </button>
+        
+        {/* Buscador */}
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="🔍 Buscar por carátula..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full px-4 py-3 pl-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              ✕
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Lista de juicios */}
@@ -40,9 +70,21 @@ function JuicioList({ juicios, loading, onCreate, onEdit, onDelete, onViewHistor
             Crear Juicio
           </button>
         </div>
+      ) : filteredJuicios.length === 0 ? (
+        <div className="text-center py-12 bg-white rounded-lg shadow">
+          <div className="text-5xl mb-4">🔍</div>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No se encontraron juicios</h3>
+          <p className="text-gray-600 mb-4">Intenta con otro término de búsqueda</p>
+          <button
+            onClick={() => setSearchTerm('')}
+            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Limpiar búsqueda
+          </button>
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {juicios.map((juicio) => (
+          {filteredJuicios.map((juicio) => (
             <div
               key={juicio.ID_Juicio}
               className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6 border border-gray-200"
