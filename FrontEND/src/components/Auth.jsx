@@ -36,6 +36,11 @@ function Auth({ setToken, setUser }) {
       setToken(response.data.token)
       setUser(response.data.user)
       setMessage(response.data.message)
+      
+      // Recargar la página para que el Dashboard se monte correctamente
+      setTimeout(() => {
+        window.location.reload()
+      }, 500)
     } catch (error) {
       setMessage(error.response?.data?.message || 'Error en la operación')
     } finally {
