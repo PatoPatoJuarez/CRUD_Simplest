@@ -3,6 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import juicioRoutes from './routes/juicioRoutes.js';
+import historialRoutes from './routes/historialRoutes.js';
 import { getConnection, closeConnection } from './config/database.js';
 
 // Cargar variables de entorno
@@ -19,17 +21,21 @@ app.use(express.urlencoded({ extended: true }));
 // Rutas
 app.get('/', (req, res) => {
   res.json({ 
-    message: 'Backend API funcionando correctamente',
+    message: 'Backend API - Sistema de Gestión de Juicios',
     version: '1.0.0',
     endpoints: {
-      auth: '/api/auth',
-      users: '/api/users'
+      auth: '/api/auth (register, login)',
+      users: '/api/users',
+      juicios: '/api/juicios (requiere token)',
+      historial: '/api/historial (requiere token)'
     }
   });
 });
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/juicios', juicioRoutes);
+app.use('/api/historial', historialRoutes);
 
 // Manejo de errores
 app.use((err, req, res, next) => {

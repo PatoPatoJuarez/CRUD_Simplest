@@ -1,56 +1,53 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import { generateToken } from '../utils/jwtUtils.js';
+import { AbogadoModel } from '../models/abogadoModel.js';
 
 const router = express.Router();
-
-// Base de datos simulada (reemplazar con DB real)
-const users = [];
 
 // Registro de usuario
 router.post('/register', async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { nombre, email, password } = req.body;
 
     // Validaciones básicas
-    if (!username || !email || !password) {
+    if (!nombre || !email || !password) {
       return res.status(400).json({ message: 'Todos los campos son requeridos' });
     }
 
     // Verificar si el usuario ya existe
-    const userExists = users.find(u => u.email === email);
+    const userExists = await AbogadoModel.findByEmail(email);
     if (userExists) {
-      return res.status(400).json({ message: 'El usuario ya existe' });
+      return res.status(400).json({ message: 'El email ya está registrado' });
     }
 
     // Hash de la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Crear usuario
-    const newUser = {
-      id: users.length + 1,
-      username,
+    // Crear abogado
+    const newAbogado = await AbogadoModel.create({
+      nombre,
       email,
-      password: hashedPassword,
-      createdAt: new Date()
-    };
-
-    users.push(newUser);
+      contraseña: hashedPassword
+    });
 
     // Generar token
-    const token = generateToken({ id: newUser.id, email: newUser.email });
+    const token = generateToken({ 
+      id: newAbogado.ID_Abogado, 
+      email: newAbogado.email 
+    });
 
     res.status(201).json({
-      message: 'Usuario registrado exitosamente',
+      message: 'Abogado registrado exitosamente',
       token,
       user: {
-        id: newUser.id,
-        username: newUser.username,
-        email: newUser.email
+        id: newAbogado.ID_Abogado,
+        nombre: newAbogado.nombre,
+        email: newAbogado.email
       }
     });
   } catch (error) {
-    res.status(500).json({ message: 'Error al registrar usuario', error: error.message });
+    res.status(500).json({ message: 'Error al registrar abogado', error: error.message });
   }
 });
 
@@ -64,28 +61,31 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Email y contraseña son requeridos' });
     }
 
-    // Buscar usuario
-    const user = users.find(u => u.email === email);
-    if (!user) {
+    // Buscar abogado
+    const abogado = await AbogadoModel.findByEmail(email);
+    if (!abogado) {
       return res.status(401).json({ message: 'Credenciales inválidas' });
     }
 
     // Verificar contraseña
-    const isValidPassword = await bcrypt.compare(password, user.password);
+    const isValidPassword = await bcrypt.compare(password, abogado.Contraseña);
     if (!isValidPassword) {
       return res.status(401).json({ message: 'Credenciales inválidas' });
     }
 
     // Generar token
-    const token = generateToken({ id: user.id, email: user.email });
+    const token = generateToken({ 
+      id: abogado.ID_Abogado, 
+      email: abogado.Email 
+    });
 
     res.json({
       message: 'Login exitoso',
       token,
       user: {
-        id: user.id,
-        username: user.username,
-        email: user.email
+        id: abogado.ID_Abogado,
+        nombre: abogado.Nombre,
+        email: abogado.Email
       }
     });
   } catch (error) {
