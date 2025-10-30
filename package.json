@@ -1,0 +1,18 @@
+{
+  "name": "crud-simplest",
+  "version": "1.0.0",
+  "description": "Full Stack App - Backend + Frontend",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix BackEnd\" \"npm run dev --prefix FrontEnd\"",
+    "start": "concurrently \"npm start --prefix BackEnd\" \"npm run dev --prefix FrontEnd\"",
+    "install-all": "npm install --prefix BackEnd && npm install --prefix FrontEnd",
+    "backend": "npm run dev --prefix BackEnd",
+    "frontend": "npm run dev --prefix FrontEnd"
+  },
+  "keywords": ["fullstack", "react", "node", "express", "jwt"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
