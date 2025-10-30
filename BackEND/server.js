@@ -3,8 +3,9 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import { getConnection, closeConnection } from './config/database.js';
 
-// variables de entorno
+// Cargar variables de entorno
 dotenv.config();
 
 const app = express();
@@ -40,7 +41,22 @@ app.use((err, req, res, next) => {
 });
 
 // Iniciar servidor
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`✅ Servidor ejecutándose en http://localhost:${PORT}`);
   console.log(`📦 Entorno: ${process.env.NODE_ENV}`);
+  console.log('🔌 Intentando conectar a SQL Server...');
+  
+  // Probar conexión a la base de datos
+  try {
+    await getConnection();
+    console.log('✅ Base de datos conectada exitosamente');
+  } catch (error) {
+    console.error('❌ Error al conectar con la base de datos:', error.message);
+  }
+});
+
+// Cerrar conexión al terminar el proceso
+process.on('SIGINT', async () => {
+  await closeConnection();
+  process.exit(0);
 });
