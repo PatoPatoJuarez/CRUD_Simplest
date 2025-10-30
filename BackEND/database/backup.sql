@@ -104,7 +104,6 @@ BEGIN
     (@ID_Juicio1, '2024-02-10', 'Presentación de testigos. Declararon 3 testigos de la parte actora.'),
     (@ID_Juicio1, '2024-03-05', 'Alegatos finales. Ambas partes presentaron sus conclusiones.');
 END
-GO
 
 IF NOT EXISTS (SELECT * FROM Historial WHERE ID_Juicio = @ID_Juicio2)
 BEGIN

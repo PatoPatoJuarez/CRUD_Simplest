@@ -37,12 +37,20 @@ GO
 DECLARE @ID_Juicio1 INT = (SELECT TOP 1 ID_Juicio FROM Juicio ORDER BY ID_Juicio);
 DECLARE @ID_Juicio2 INT = (SELECT ID_Juicio FROM Juicio ORDER BY ID_Juicio OFFSET 1 ROWS FETCH NEXT 1 ROWS ONLY);
 
-INSERT INTO Historial (ID_Juicio, Fecha, Descripcion) VALUES
-(@ID_Juicio1, '2024-01-20', 'Audiencia preliminar. Se fijó fecha para presentación de pruebas.'),
-(@ID_Juicio1, '2024-02-10', 'Presentación de testigos. Declararon 3 testigos de la parte actora.'),
-(@ID_Juicio1, '2024-03-05', 'Alegatos finales. Ambas partes presentaron sus conclusiones.'),
-(@ID_Juicio2, '2024-03-25', 'Se admitió la acción de amparo. Notificación a la parte demandada.'),
-(@ID_Juicio2, '2024-04-15', 'Responde el Estado Nacional. Se solicita ampliación de plazo.');
+IF @ID_Juicio1 IS NOT NULL
+BEGIN
+    INSERT INTO Historial (ID_Juicio, Fecha, Descripcion) VALUES
+    (@ID_Juicio1, '2024-01-20', 'Audiencia preliminar. Se fijó fecha para presentación de pruebas.'),
+    (@ID_Juicio1, '2024-02-10', 'Presentación de testigos. Declararon 3 testigos de la parte actora.'),
+    (@ID_Juicio1, '2024-03-05', 'Alegatos finales. Ambas partes presentaron sus conclusiones.');
+END
+
+IF @ID_Juicio2 IS NOT NULL
+BEGIN
+    INSERT INTO Historial (ID_Juicio, Fecha, Descripcion) VALUES
+    (@ID_Juicio2, '2024-03-25', 'Se admitió la acción de amparo. Notificación a la parte demandada.'),
+    (@ID_Juicio2, '2024-04-15', 'Responde el Estado Nacional. Se solicita ampliación de plazo.');
+END
 GO
 
 PRINT '✅ Base de datos limpiada y datos de prueba creados exitosamente';
