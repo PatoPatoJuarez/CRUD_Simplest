@@ -9,12 +9,14 @@ Sistema diseñado para abogados que permite gestionar juicios y su historial de 
 ## ✨ Características Principales
 
 - ✅ **Autenticación segura** con JWT (tokens válidos por 7 días)
+- ✅ **Validaciones robustas** con Joi (contraseñas seguras, emails válidos)
+- ✅ **Arquitectura MVC**: Controllers, Models, Routes separados
 - ✅ **Privacidad total**: Cada abogado solo ve sus propios juicios
 - ✅ **CRUD completo** de juicios y historial
 - ✅ **Cálculo automático** de días transcurridos desde inicio del juicio
 - ✅ **Diseño responsive** con Tailwind CSS (mobile-first)
 - ✅ **Base de datos SQL Server** con stored procedures
-- ✅ **Validaciones** en frontend y backend
+- ✅ **Custom Hooks** en React para lógica reutilizable
 
 ## 📍 Estructura del Proyecto
 
@@ -23,6 +25,10 @@ CRUD_Simplest/
 ├── BackEnd/
 │   ├── config/
 │   │   └── database.js      # Configuración SQL Server
+│   ├── controllers/         # 🎯 Lógica de negocio (MVC)
+│   │   ├── authController.js     # Controller autenticación
+│   │   ├── juicioController.js   # Controller juicios
+│   │   └── historialController.js # Controller historial
 │   ├── database/
 │   │   └── schema.sql       # Script de creación de BD
 │   ├── middleware/
@@ -35,6 +41,8 @@ CRUD_Simplest/
 │   │   ├── authRoutes.js    # Rutas de autenticación
 │   │   ├── juicioRoutes.js  # Rutas de juicios
 │   │   └── historialRoutes.js # Rutas de historial
+│   ├── validators/          # 🔒 Validaciones con Joi
+│   │   └── validators.js    # Schemas de validación
 │   ├── utils/
 │   │   └── jwtUtils.js      # Utilidades JWT
 │   ├── .env              # Variables de entorno
@@ -49,6 +57,9 @@ CRUD_Simplest/
 │   │   │   ├── JuicioList.jsx   # Lista de juicios
 │   │   │   ├── JuicioForm.jsx   # Formulario juicio
 │   │   │   └── HistorialView.jsx # Vista historial
+│   │   ├── hooks/               # 🪝 Custom Hooks
+│   │   │   ├── useAuth.js       # Hook de autenticación
+│   │   │   └── useJuicios.js    # Hook de juicios
 │   │   ├── App.jsx
 │   │   └── main.jsx
 │   ├── tailwind.config.cjs # Config Tailwind
@@ -166,6 +177,12 @@ Email: abogado@test.com
 Contraseña: Test123!
 ```
 
+**Nota:** La contraseña debe cumplir con los requisitos de seguridad:
+- Mínimo 6 caracteres
+- Al menos una mayúscula
+- Al menos una minúscula
+- Al menos un número
+
 **O registra un nuevo usuario** desde la pantalla de registro.
 
 **Nota:** Cada abogado tiene acceso únicamente a sus propios juicios. Los datos están completamente aislados por usuario.
@@ -184,10 +201,31 @@ Contraseña: Test123!
 
 - **Express**: Framework web minimalista
 - **JWT**: Autenticación con tokens
+- **Joi**: Validaciones robustas con schemas
+- **Arquitectura MVC**: Separación clara de responsabilidades
 - **CORS**: Configurado para permitir peticiones del frontend
-- **Bcrypt**: Hash seguro de contraseñas
+- **Bcrypt**: Hash seguro de contraseñas (salt rounds: 10)
 - **ES Modules**: Import/Export moderno
 - **Nodemon**: Recarga automática en desarrollo
+
+### 🔒 Validaciones con Joi
+
+**Registro:**
+- Email válido
+- Contraseña: mínimo 6 caracteres, debe contener mayúscula, minúscula y número
+- Nombre: entre 3-100 caracteres
+
+**Login:**
+- Email válido
+- Contraseña requerida
+
+**Juicios:**
+- Carátula: entre 5-200 caracteres
+- Fecha de inicio válida
+
+**Historial:**
+- Fecha válida
+- Descripción: entre 10-1000 caracteres
 
 ### 📡 Endpoints de la API
 
@@ -215,10 +253,12 @@ Contraseña: Test123!
 - **Vite 6**: Build tool ultrarapido
 - **Tailwind CSS 3**: Diseño moderno y responsive
 - **Axios**: Cliente HTTP para API REST
+- **Custom Hooks**: useAuth y useJuicios para lógica reutilizable
 - **Componentes reutilizables**: Arquitectura modular
 - **localStorage**: Persistencia de sesión (token JWT)
 - **Diseño responsive**: Mobile-first, adaptable a tablets y desktop
 - **Validaciones**: Formularios con validación en tiempo real
+- **Buscador en tiempo real**: Filtrado de juicios por carátula
 
 ## 📝 Cómo Usar la Aplicación
 
